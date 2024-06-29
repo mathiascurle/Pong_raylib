@@ -36,6 +36,7 @@ void Ball::updateBall()
     // game over
     restart = true;
     PlaySound(Sounds::pong);
+    
     if (speedX < 0)
     {
       Scoreboard::addScore(0, 1);
@@ -47,7 +48,8 @@ void Ball::updateBall()
       speedX = (float)startSpeed;
     }
     speedY = (float)startSpeed;
-    SetSoundPitch(Sounds::ping, 1);
+    pitch = 1;
+    Sounds::setPingPitch(pitch);
   }
 
   // If over or under
@@ -56,7 +58,7 @@ void Ball::updateBall()
   {
     PlaySound(Sounds::ping);
     pitch += 0.1;
-    SetSoundPitch(Sounds::ping, pitch);
+    Sounds::setPingPitch(pitch);
     speedY *= -1;
   }
 }
@@ -70,9 +72,6 @@ void Ball::increaseBallSpeed()
 Vector2 Ball::getCenter()
 {
   return Vector2{(float)centerX, (float)centerY};
-  //outCenter.x = (float)this->centerX;
-  //outCenter.y = (float)this->centerY;
-  //return outCenter;
 }
 
 void Ball::hitPlayer()
@@ -80,7 +79,7 @@ void Ball::hitPlayer()
   speedX *= -1;
   PlaySound(Sounds::ping);
   pitch += 0.1;
-  SetSoundPitch(Sounds::ping,pitch);
+  Sounds::setPingPitch(pitch);
   increaseBallSpeed();
 }
 

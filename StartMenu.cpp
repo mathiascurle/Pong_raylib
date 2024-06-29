@@ -17,10 +17,9 @@ StartMenu::StartMenu(Gamestate* state, Player* player1, Player* player2)
   m_gamepad = 0;
   m_firstUpdate = true;
   m_musicOn = true;
-  m_fadeOutMusic = false;
-  m_setMusicVolume = 1.0f;
-  m_currentMusicVolume = m_setMusicVolume;
-  //Sounds::startMusic = LoadMusicStream("resources/Ambient Pluck.wav");
+  m_fadeMusicToLoad = false;
+  m_chosenMusicVolume = 0.5f;
+  m_currentMusicVolume = m_chosenMusicVolume;
 }
 
 float timePlayed = 0.0f;        // Time played normalized [0.0f..1.0f]
@@ -31,17 +30,11 @@ void StartMenu::UpdateStartMenu()
   if (m_firstUpdate && m_musicOn)
     StartMusic();
   updateMusic();
-  //if (m_musicOn)
-  //  updateMusic();
-  //else
-  //{m_fadeOutMusic = true; m_exit = true;}
-
 
   // Inputs
   if (IsKeyPressed(KEY_ENTER))
   {
-    m_fadeOutMusic = true;
-    //setGamestate(Gamestate::PLAYING); // Continue with enter
+    m_fadeMusicToLoad = true;
   }
 
   // Assigning gamepad if up button is pressed
@@ -92,15 +85,21 @@ void StartMenu::DrawStartMenu()
 void StartMenu::StartMusic()
 {
   m_firstUpdate = false;
-  SetMusicVolume(Sounds::startMusic, 0.5);
+  m_currentMusicVolume = m_chosenMusicVolume;
+  SetMusicVolume(Sounds::startMusic, m_chosenMusicVolume);
   PlayMusicStream(Sounds::startMusic);
 }
+
 
 void StartMenu::updateMusic()
 {
   if (!m_musicOn)
+  {
+    if (!IsMusicStreamPlaying(Sounds::startMusic))
+      return;
     fadeOutMusic(2.0f);
-  else if (m_fadeOutMusic)
+  }
+  else if (m_fadeMusicToLoad)
     fadeOutMusic(3.0f);
 
   // Music
@@ -119,20 +118,19 @@ void StartMenu::setGamestate(Gamestate state)
   *m_statePtr = state;
 }
 
-void StartMenu::fadeOutMusic(float time)
+void StartMenu::fadeOutMusic(float timeToFade)
 {
-  float timeToFade = time;
-  
-  float deltaAmount = 1.0f / (timeToFade * 60);
+  float deltaAmount = 1.0f / (timeToFade * (60 / m_chosenMusicVolume));
   m_currentMusicVolume -= deltaAmount;
+
   if (m_currentMusicVolume <= 0)
   {
     StopMusicStream(Sounds::startMusic);
-    m_currentMusicVolume = m_setMusicVolume;
+    //m_currentMusicVolume = m_chosenMusicVolume;
     m_firstUpdate = true;
-    if (m_fadeOutMusic)
+    if (m_fadeMusicToLoad)
       setGamestate(Gamestate::PLAYING);
-    m_fadeOutMusic = false;
+    m_fadeMusicToLoad = false;
     return;
   }
   SetMusicVolume(Sounds::startMusic, m_currentMusicVolume);

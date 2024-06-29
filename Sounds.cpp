@@ -14,9 +14,9 @@ void Sounds::Init()
   pong = LoadSound("resources/Pong.wav");
   startMusic = LoadMusicStream("resources/Ambient Pluck.wav");
 
-  SetSoundVolume(ping, 1);
-  SetSoundVolume(pong, 1);
-  SetMusicVolume(startMusic, 1);
+  SetSoundVolume(ping, 1.0f);
+  SetSoundVolume(pong, 1.0f);
+  //SetMusicVolume(startMusic, 1.0f);
   SetMasterVolume(s_masterVolume);
 }
 
@@ -29,3 +29,7 @@ void Sounds::Close()
   CloseAudioDevice();
 }
 
+void Sounds::setPingPitch(float pitch)
+{
+  SetSoundPitch(ping, pitch);
+}

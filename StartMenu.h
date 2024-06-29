@@ -25,8 +25,8 @@ private:
   int          m_gamepad;
   bool         m_firstUpdate;
   bool         m_musicOn;
-  bool         m_fadeOutMusic;
-  float        m_setMusicVolume;
+  bool         m_fadeMusicToLoad;
+  float        m_chosenMusicVolume;
   float        m_currentMusicVolume;
 
 };

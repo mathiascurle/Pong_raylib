@@ -7,6 +7,8 @@ public:
   static void Init();
   static void Close();
 
+  static void setPingPitch(float pitch);
+
 public:
   static Sound ping;
   static Sound pong;
