@@ -28,6 +28,7 @@ void Playing::UpdatePlaying()
   m_player1Ptr->updatePlayer();
   m_player2Ptr->updatePlayer();
 }
+
 void Playing::DrawPlaying()
 {
   BeginDrawing();
